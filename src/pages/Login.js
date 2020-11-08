@@ -1,8 +1,9 @@
 import React, {useContext, useState} from 'react';
-import {Redirect} from 'react-router-dom';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import {AuthContext} from "../context/authContext";
+import ErrorMessage from "../messages/errorMessage";
+import {Redirect} from "react-router-dom";
 
 export default (props) => {
     const {user, setUser} = useContext(AuthContext);
@@ -30,6 +31,7 @@ export default (props) => {
         <div style={{margin: '70px 550px'}}>
 
             <Form>
+                {loginState.loginFailed && <ErrorMessage message="Invalid login or password"/>}
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="email" value={fields['username']} onChange={handleInput('username')}/>
@@ -49,6 +51,15 @@ export default (props) => {
                                 });
                             } else {
                                 console.log("hello");
+                                changeLoginState(preState => ({
+                                    ...preState,
+                                    loginFailed: true
+                                }));
+                                setField(
+                                    {
+                                        username: '',
+                                        password: ''
+                                    });
                             }
                         }}>
                     Login
